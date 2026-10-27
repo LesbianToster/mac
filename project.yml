@@ -1,0 +1,23 @@
+name: VHSCam
+options:
+  bundleIdPrefix: com.vhscam
+targets:
+  VHSCam:
+    type: application
+    platform: iOS
+    deploymentTarget: "15.0"
+    sources: [Sources]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.vhscam.app
+        PRODUCT_NAME: VHSCam
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: VHS Cam
+        INFOPLIST_KEY_NSCameraUsageDescription: "Camera is used to take photos"
+        INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription: "Saving photos to the library"
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UISupportedInterfaceOrientations: UIInterfaceOrientationPortrait
+        TARGETED_DEVICE_FAMILY: "1"
+        MARKETING_VERSION: "1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        SWIFT_VERSION: "5.0"
