@@ -122,8 +122,8 @@ enum VHS {
 final class Cam: NSObject, ObservableObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCapturePhotoCaptureDelegate {
     @Published var preview: UIImage?
     @Published var saved = false
-    @Published var look = Look() { didSet { _look = look } }
-    private var _look = Look()
+    @Published var look = Look() { didSet { lookCopy = look } }
+    private var lookCopy = Look()
 
     @Published var lens = 1 { didSet { let l = lens; q.async { self.configure(l) } } }  // 0=0.5x, 1=1x, 2=селфи
     @Published var auto = true { didSet { apply() } }
@@ -202,7 +202,7 @@ final class Cam: NSObject, ObservableObject, AVCaptureVideoDataOutputSampleBuffe
     func photoOutput(_ o: AVCapturePhotoOutput, didFinishProcessingPhoto p: AVCapturePhoto, error: Error?) {
         guard let data = p.fileDataRepresentation(),
               let ci = CIImage(data: data, options: [.applyOrientationProperty: true]),
-              let ui = VHS.render(ci, _look) else { return }
+              let ui = VHS.render(ci, lookCopy) else { return }
         PHPhotoLibrary.shared().performChanges({
             PHAssetChangeRequest.creationRequestForAsset(from: ui)
         }) { ok, _ in
@@ -216,7 +216,7 @@ final class Cam: NSObject, ObservableObject, AVCaptureVideoDataOutputSampleBuffe
     func captureOutput(_ o: AVCaptureOutput, didOutput sb: CMSampleBuffer, from c: AVCaptureConnection) {
         guard let pb = CMSampleBufferGetImageBuffer(sb) else { return }
         let ci = CIImage(cvPixelBuffer: pb).transformed(by: CGAffineTransform(scaleX: 0.5, y: 0.5))
-        if let ui = VHS.render(ci, _look) { DispatchQueue.main.async { self.preview = ui } }
+        if let ui = VHS.render(ci, lookCopy) { DispatchQueue.main.async { self.preview = ui } }
     }
 }
 
